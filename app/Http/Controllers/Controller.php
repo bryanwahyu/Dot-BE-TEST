@@ -39,7 +39,6 @@ class Controller extends BaseController
                 'last_page' => $data->lastPage(),
             ];
         }
-        dd($json);
         return response()->json(data:$json,status:$code);
 
     }

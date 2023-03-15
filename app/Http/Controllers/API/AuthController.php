@@ -21,14 +21,14 @@ class AuthController extends Controller
             'gender'=>'required'
         ]);
         try {
-            $data['user']=$req->except(['address','disability_id','gender']);
-
+            $data['user']=$req->except(['address','disability_id','gender','password']);
+            $data['user']['password']=bcrypt($req->password);
             $user=User::create($data['user']);
             $dataprofile['user_id']=$user->id;
             $dataprofile['address']=$req->address;
             $dataprofile['gender']=$req->gender;
             $dataprofile['disability_id']=$req->disability_id;
-            $dataprofle['full_name']=$req->name;
+            $dataprofile['full_name']=$user->name;
             Profile::create($dataprofile);
 
             return $this->success_json(code:200,data:$user,message:'success to register');
@@ -46,5 +46,10 @@ class AuthController extends Controller
      }else{
         return $this->error_json(code:400,data:'username and password are wrong',message:"fail to login");
      }
+    }
+    public function get_data_auth()
+    {
+        $auth=Auth::user();
+        return $this->success_json(code:200,data:$auth,message:'data authorization');
     }
 }

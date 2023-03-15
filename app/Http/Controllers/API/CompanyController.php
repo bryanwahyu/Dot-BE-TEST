@@ -31,7 +31,7 @@ class CompanyController extends Controller
                 $company=$company->with($with);
             }
             if($req->has('page') && $req->has('page_size')){
-                return $this->success_json(data:$company->paginate($req->page_size),message:"Success get page data",paginate:true);
+                return $this->success_json(code:200,data:$company->paginate($req->page_size),message:"Success get page data",paginate:true);
             }
             return $this->success_json(data:$company->get(),message:"Success get a data for company",code:200);
         }
@@ -53,17 +53,15 @@ class CompanyController extends Controller
             'name'=>'required'
         ]);
         try {
-            $data=$req->all();
+            $data=$req->except("job");
 
-            $company=Company::create([$data]);
-            if($data['job']){
-                $company->job()->push($data['job']);
-            }
+            $company=Company::create($data);
+           
             return $this->success_json(code:200,data:$company->load('job'),message:"Success to save in db");
 
            }
         catch(Exception $e){
-            return $this->error_json(data:$e->getMessage(),message:"Failed to save api company");
+            return $this->error_json(code:500,data:$e->getMessage(),message:"Failed to save api company");
         }
     }
 
@@ -118,7 +116,7 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         $company->delete();
-        
+
         return $this->success_json(code:200,data:null,message:"Successful deleted");
     }
 }

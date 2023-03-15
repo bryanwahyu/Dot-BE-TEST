@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CompanyController;
+use App\Http\Controllers\API\DisabilityController;
+use App\Models\Disabilities\Disabilities;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +18,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('disability',[DisabilityController::class,'index']);
+Route::post('login',[AuthController::class,'login']);
+Route::get('user',[AuthController::class,'get_data_auth'])->middleware('auth:sanctum');
+Route::post('register',[AuthController::class,'register']);
+
+
 Route::apiResource('company',CompanyController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
